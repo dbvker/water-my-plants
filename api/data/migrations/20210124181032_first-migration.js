@@ -2,9 +2,9 @@ exports.up = async (knex) => {
   await knex.schema
     .createTable('users', (users) => {
       users.increments('user_id')
-      users.string('username', 200).notNullable().unique()
-      users.string('phoneNumber', 15).notNullable()
-      users.string('password', 200).notNullable()
+      users.string('username').notNullable().unique()
+      users.string('phoneNumber').notNullable().unique()
+      users.string('password').notNullable()
       users.timestamps(false, true)
     })
     .createTable('plants', (plant) => {
@@ -12,7 +12,13 @@ exports.up = async (knex) => {
       plant.string('nickname').notNullable()
       plant.string('species').notNullable()
       plant.string('h2oFrequency').notNullable()
-      plant.string('image')
+      plant.integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('user_id')
+        .inTable('users')
+        .onUpdate('RESTRICT')
+        .onDelete('RESTRICT')
     })
 }
 
